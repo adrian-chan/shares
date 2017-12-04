@@ -4,5 +4,11 @@
         "slim/slim": "^3.9",
         "vlucas/phpdotenv": "^2.4",
         "twig/twig": "^1.35"
+    },
+    "autoload" : {
+        "psr-4": {
+            "Controllers\\": "Controllers",
+            "Classes\\": "Classes"
+        }
     }
 }
