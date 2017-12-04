@@ -1,26 +1,24 @@
 <?php
     namespace Classes;
 
+    use Classes\Shares;
+
     class Projections
     {
-        protected $buyPrice;
+        protected $currentPrice;
         protected $numberShares;
         protected $acquisitionCost = 0;
+        protected $shares;
 
-        public function __construct()
+        public function __construct(Shares $shares)
         {
+            $this->shares = $shares;
             return $this;
         }
 
-        public function setBuyPrice($price)
+        public function setCurrentPrice($price)
         {
-            $this->buyPrice = $price;
-            return $this;
-        }
-
-        public function calculateNumberShares($capitalExpenditure)
-        {
-            $this->numberShares = number_format($capitalExpenditure / $this->buyPrice, 2);
+            $this->setCurrentPrice = $price;
             return $this;
         }
 
@@ -30,14 +28,37 @@
             return $this;
         }
 
-        public function gains($currentPrice)
+        public function gains($price)
         {
-            return number_format(((($currentPrice - $this->buyPrice) / $this->buyPrice) * 100), 3);
+            $price = $this->value($price);
+            return number_format(((($price - $this->shares->returnCapital()) / $this->shares->returnCapital()) * 100), 3);
         }
 
-        public function value($currentPrice)
+        public function value($price)
         {
-            return (($currentPrice * $this->numberShares) - $this->acquisitionCost);
+            return (($price * $this->shares->numberShares()) - $this->acquisitionCost);
+        }
+
+        /*
+         * price per share in relation to capital expenditure
+         */
+        public function projectPercent($percent)
+        {
+            $percent            = $percent / 100;
+            $totalcapital       = $this->shares->returnCapital() + $this->acquisitionCost;
+            $priceAtPercentGain = $totalcapital + ($totalcapital * $percent);
+            $numberOfShares     = $this->shares->numberShares();
+
+            $pricePerShare = $priceAtPercentGain / $numberOfShares;
+
+            $value = [];
+            //$value['total_capital']    = $totalcapital;
+            $value['percentage']      = $percent;
+            //$value['price_with_extra']    = $includeExtra;
+            $value['price']           = number_format($priceAtPercentGain, 3);
+            $value['price_per_share'] = number_format($pricePerShare, 3);
+
+            //return $value;
         }
 
         public function time_series($priceToStart, $priceToEnd, $increment)
@@ -47,8 +68,8 @@
             $priceToEnd     = number_format($priceToEnd,3);
             $increment      = number_format($increment,3);
 
-            $prices["buyPrice"] = $this->buyPrice;
-            $prices["numberShares"] = $this->numberShares;
+            $prices["buyPrice"] = $this->shares->returnPrice();
+            $prices["numberShares"] = $this->shares->numberShares();
 
             if($priceToStart < $priceToEnd)
             {
@@ -56,11 +77,7 @@
                 {
                     $i = number_format($i, 3);
                     $prices[(string) $i]["gains"] = $this->gains($i);
-
-                    if ($this->numberShares != null)
-                    {
-                        $prices[(string) $i]["value"] = $this->value($i);
-                    }
+                    $prices[(string) $i]["value"] = $this->value($i);
 
                 }
                 return $prices;
@@ -68,7 +85,6 @@
             else {
                 Throw new \Exception("PriceStart is greater than PriceEnd");
             }
-
         }
     }
 ?>

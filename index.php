@@ -31,13 +31,23 @@ $app->get('/', function () {
 
 //ROUTE FOR BACKEND API CALL
 $app->get('/home', function (Request $request, Response $response) {
-    
-    var_dump( (new \Classes\Projections())
-        ->setBuyPrice(4.18)
-        ->calculateNumberShares(500)
-        ->setBuySellCost(19.95, 19.95)
-        ->time_series(4.00, 4.60, 0.01) );
-});
+
+        $cwy = (new \Classes\Shares('GSW', 'Get Swift'))
+                ->setPrice(4.18)
+                ->setCapital(500);
+
+
+
+
+        $cwy_projection = (new \Classes\Projections($cwy))
+                    ->setCurrentPrice(4.32)
+                    ->setBuySellCost(19.95, 19.95);
+
+        var_dump($cwy_projection->time_series(4.18, 4.35, 0.01));
+
+        var_dump( $cwy_projection->projectPercent(-3.990000));
+        var_dump( $cwy_projection->projectPercent(-5));
+    });
 
 $app->get('/display', \Controllers\TestController::class . ':display');
 
