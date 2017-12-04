@@ -31,26 +31,15 @@ $app->get('/', function () {
 
 //ROUTE FOR BACKEND API CALL
 $app->get('/home', function (Request $request, Response $response) {
-
-    $buyPrice = 1.00;
-    $currentPrice = 2.00;
-
-    echo (new \Classes\Projections())->gains($buyPrice, $currentPrice);
-    echo "<br/>";
-    echo (new \Classes\Projections())->gains(100, 300);
-    echo "<br/ >";
-    echo (new \Classes\Projections())->gains(100, 1000);
-    //$test = new b;
-
-//    $test = $this->get('ct');
-//    $test->test();
-    //var_dump($this->view);
-    //var_dump($this->ct);
-    //return $newResponse;
+    
+    var_dump( (new \Classes\Projections())
+        ->setBuyPrice(4.18)
+        ->calculateNumberShares(500)
+        ->setBuySellCost(19.95, 19.95)
+        ->time_series(4.00, 4.60, 0.01) );
 });
 
 $app->get('/display', \Controllers\TestController::class . ':display');
-
 
 $app->run();
 ?>
