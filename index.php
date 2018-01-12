@@ -48,6 +48,33 @@ $app->get('/home', function (Request $request, Response $response) {
     
 });
 
+//Route for sentiment analysis
+$app->get('/sentiment', function (Request $request, Response $response) {
+
+    $url = "http://forums.whirlpool.net.au/forum-replies.cfm?t=2619312";
+    $client = new Goutte\Client();
+
+
+    $content = $client->request('GET', $url);
+
+    $text = "";
+   // $content->filter('.comment-body > p')->each(function($node) use (&$text) {
+    $content->filter('.bodytext p')->each(function($node) use (&$text) {
+        $text .= $node->text();
+    });
+
+    //$text=$content->html();
+
+    $sentiment = new \PHPInsight\Sentiment();
+
+    $result["paragraph"] = $text;
+    $result["sentiment"] = $sentiment->score($text);
+    $result["category"] = $sentiment->categorise($text);
+
+    var_dump($result);
+
+});
+
 $app->get('/display', \Controllers\TestController::class . ':display');
 
 $app->run();

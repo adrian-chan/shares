@@ -3,7 +3,9 @@
     "require": {
         "slim/slim": "^3.9",
         "vlucas/phpdotenv": "^2.4",
-        "twig/twig": "^1.35"
+        "twig/twig": "^1.35",
+        "jwhennessey/phpinsight": "^2.0",
+        "fabpot/goutte": "^3.2"
     },
     "autoload" : {
         "psr-4": {
