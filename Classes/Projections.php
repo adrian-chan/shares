@@ -53,12 +53,14 @@
 
             $value = [];
             //$value['total_capital']    = $totalcapital;
+            $value["initial"]['capital'] = number_format($this->shares->returnCapital(), 3);
+            $value["initial"]['buy_price'] = number_format($this->shares->returnPrice(), 3);
+
             $value['percentage']      = $percent;
-            //$value['price_with_extra']    = $includeExtra;
             $value['price']           = number_format($priceAtPercentGain, 3);
             $value['price_per_share'] = number_format($pricePerShare, 3);
 
-            //return $value;
+            return $value;
         }
 
         public function time_series($priceToStart, $priceToEnd, $increment)
@@ -76,7 +78,7 @@
                 for ($i = $priceToStart; $i <= $priceToEnd; $i += $increment)
                 {
                     $i = number_format($i, 3);
-                    $prices[(string) $i]["gains"] = $this->gains($i);
+                    $prices[(string) $i]["percentage_gains"] = $this->gains($i);
                     $prices[(string) $i]["value"] = $this->value($i);
 
                 }
@@ -85,6 +87,11 @@
             else {
                 Throw new \Exception("PriceStart is greater than PriceEnd");
             }
+        }
+
+        public function breakEvenPrice()
+        {
+            return $this->projectPercent(0);
         }
     }
 ?>

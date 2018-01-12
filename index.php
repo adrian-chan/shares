@@ -32,22 +32,21 @@ $app->get('/', function () {
 //ROUTE FOR BACKEND API CALL
 $app->get('/home', function (Request $request, Response $response) {
 
-        $cwy = (new \Classes\Shares('GSW', 'Get Swift'))
-                ->setPrice(4.18)
-                ->setCapital(500);
+    $cwy = (new \Classes\Shares('PLS', 'Pilbara minerals'))
+        ->setPrice(1.18)
+        ->setCapital(500);
 
 
+    $cwy_projection = (new \Classes\Projections($cwy))
+        ->setCurrentPrice(1.20)
+        ->setBuySellCost(19.95, 19.95);
 
+    var_dump($cwy_projection->time_series(1.10, 2.00, 0.01));
 
-        $cwy_projection = (new \Classes\Projections($cwy))
-                    ->setCurrentPrice(4.32)
-                    ->setBuySellCost(19.95, 19.95);
-
-        var_dump($cwy_projection->time_series(4.18, 4.35, 0.01));
-
-        var_dump( $cwy_projection->projectPercent(-3.990000));
-        var_dump( $cwy_projection->projectPercent(-5));
-    });
+    var_dump( $cwy_projection->projectPercent(0));
+    var_dump( $cwy_projection->breakEvenPrice());
+    
+});
 
 $app->get('/display', \Controllers\TestController::class . ':display');
 
