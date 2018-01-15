@@ -9,11 +9,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 // Register Twig View helper
 $container = new \Slim\Container;
 $container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig(__DIR__ . '/views');
+
+    $view = new \Slim\Views\Twig(__DIR__ . '/Views');
 
     // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace('index.php', '', $c['request']->getUri()->getBasePath()), '/');
-    $view->addExtension(new Slim\Views\TwigExtension($c['router'], $basePath));
+    $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
+    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
     return $view;
 };
@@ -24,8 +25,12 @@ $container['ct'] = function ($container) {
 
 $app = new Slim\App($container);
 
-$app->get('/', function () {
+$app->get('/', function ($request, $response, $args) {
     echo "Test Assignment";
+
+    $test = "this is a test of slim configuration";
+    $args["test"] = $test;
+    $this->view->render($response, 'test.twig', $args);
 });
 
 
