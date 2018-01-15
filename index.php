@@ -26,10 +26,11 @@ $container['ct'] = function ($container) {
 $app = new Slim\App($container);
 
 $app->get('/', function ($request, $response, $args) {
-    echo "Test Assignment";
 
     $test = "this is a test of slim configuration";
     $args["test"] = $test;
+    $args["env"] = getenv("APP_ENV");
+    var_dump($args);
     $this->view->render($response, 'test.twig', $args);
 });
 
@@ -51,6 +52,12 @@ $app->get('/home', function (Request $request, Response $response) {
     var_dump( $cwy_projection->projectPercent(0));
     var_dump( $cwy_projection->breakEvenPrice());
     
+});
+
+$app->get('/quantcast', function ($request, $response) {
+
+ //$response   $url
+
 });
 
 $app->get('/display', \Controllers\TestController::class . ':display');

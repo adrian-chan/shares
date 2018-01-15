@@ -8,4 +8,8 @@ $config = [
     ]
 ];
 
+//LOAD DOTENV WITH PHPDOTENV
+$dotenv = new \Dotenv\Dotenv(__DIR__ . "/config", '.env');
+$dotenv->load();
+
 ?>
