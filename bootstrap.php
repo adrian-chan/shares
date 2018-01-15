@@ -9,7 +9,12 @@ $config = [
 ];
 
 //LOAD DOTENV WITH PHPDOTENV
-$dotenv = new \Dotenv\Dotenv(__DIR__ . "/config", '.env');
-$dotenv->load();
-
+//check if file exists needed here
+try {
+    $dotenv = new \Dotenv\Dotenv(__DIR__ . "/config", '.env');
+    $dotenv->load();
+}
+catch (Exception $e) {
+    print $e->getMessage();
+}
 ?>
